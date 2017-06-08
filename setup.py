@@ -16,9 +16,10 @@ def reporthook(blocknum, blocksize, totalsize):
 
 
 setup(
-    name='pick-tdna-primers',
+    name='pick_tdna_primers',
     version='0.1',
-    py_modules=['pick-tdna-primers'],
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'Click',
         'primer3-py',
@@ -26,16 +27,11 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-        'pick-tdna-primers=TDNA_primer_design.pick-tdna-primers:run_tdna_primers'
+        'pick_tdna_primers=pick_tdna_primers:run_tdna_primers'
         ]
     }
 )
 
-def makeFastaIndex():
-    from pyfaidx import Fasta
-    sys.stderr.write('Building fasta index...')
-    Fasta('data/AT9.fa')
-    sys.stderr.write(' Done\n')
 
 signal_url = 'http://signal.salk.edu/database/transcriptome/'
 data_files = ['T-DNA.SALK', 'T-DNA.SAIL', 'T-DNA.GABI', 'AT9.fa']
@@ -51,8 +47,6 @@ for file in data_files:
         urllib.request.urlretrieve(url_path, 'data/' + file, reporthook)
     else:
         sys.stderr.write(' OK' + '\n')
-
-makeFastaIndex()
 
 sys.stderr.write('Creating default Primer3 config file...')
 primer3_seq_args = {

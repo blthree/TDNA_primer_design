@@ -1,6 +1,5 @@
 import os, sys
 import urllib.request
-from pyfaidx import Fasta
 from setuptools import setup, find_packages
 
 def reporthook(blocknum, blocksize, totalsize):
@@ -31,6 +30,12 @@ setup(
     ''',
 )
 
+def makeFastaIndex():
+    from pyfaidx import Fasta
+    sys.stderr.write('Building fasta index...')
+    Fasta('data/AT9.fa')
+    sys.stderr.write(' Done\n')
+
 signal_url = 'http://signal.salk.edu/database/transcriptome/'
 data_files = ['T-DNA.SALK', 'T-DNA.SAIL', 'T-DNA.GABI', 'AT9.fa']
 if not os.path.exists('data'):
@@ -46,9 +51,7 @@ for file in data_files:
     else:
         sys.stderr.write(' OK' + '\n')
 
-sys.stderr.write('Building fasta index...')
-Fasta('data/AT9.fa')
-sys.stderr.write(' Done\n')
+makeFastaIndex()
 
 sys.stderr.write('Creating default Primer3 config file...')
 primer3_seq_args = {

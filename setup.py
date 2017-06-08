@@ -36,7 +36,7 @@ setup(
 signal_url = 'http://signal.salk.edu/database/transcriptome/'
 data_files = ['T-DNA.SALK', 'T-DNA.SAIL', 'T-DNA.GABI', 'AT9.fa']
 if not os.path.exists('data'):
-    os.mkdir('data', mode=755)
+    os.mkdir('data', mode=775)
 
 for file in data_files:
     sys.stderr.write('Checking for ' + file + '...')

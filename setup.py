@@ -15,22 +15,22 @@ def reporthook(blocknum, blocksize, totalsize):
     else: # total size is unknown
         sys.stderr.write("read %d\n" % (readsofar,))
 
-'''
+
 setup(
-    name='yourscript',
+    name='pick-tdna-primers',
     version='0.1',
-    py_modules=['yourscript'],
+    py_modules=['pick-tdna-primers'],
     install_requires=[
         'Click',
         'primer3-py',
         'pyfaidx',
     ],
-    #entry_points='''
-    #    [console_scripts]
-    #    yourscript=yourscript:cli
-   # ''',
-#)
-#'''
+    entry_points='''
+        [console_scripts]
+        pick-tdna-primers=pick-tdna-primers:cli
+    ''',
+)
+
 signal_url = 'http://signal.salk.edu/database/transcriptome/'
 data_files = ['T-DNA.SALK', 'T-DNA.SAIL', 'T-DNA.GABI', 'AT9.fa']
 if not os.path.exists('data'):

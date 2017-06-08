@@ -24,10 +24,11 @@ setup(
         'primer3-py',
         'pyfaidx',
     ],
-    entry_points='''
-        [console_scripts]
-        pick-tdna-primers=TDNA_primer_design.pick-tdna-primers:run_tdna_primers
-    ''',
+    entry_points={
+        'console_scripts': [
+        'pick-tdna-primers=TDNA_primer_design.pick-tdna-primers:run_tdna_primers'
+        ]
+    }
 )
 
 def makeFastaIndex():

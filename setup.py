@@ -26,7 +26,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        pick-tdna-primers=pick-tdna-primers:cli
+        pick-tdna-primers=pick-tdna-primers:run_tdna_primers
     ''',
 )
 

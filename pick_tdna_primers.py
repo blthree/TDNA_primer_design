@@ -16,7 +16,8 @@ def show_help_if_missing(ctx, param, value):
 @click.option('--ext5', default=300, help='ext5, basepairs upstream of T-DNA to exclude')
 @click.option('--ext3', default=300, help='ext3, basepairs downstream of T-DNA to exclude')
 @click.option('-z', '--p_zone', default=200, help='p_zone, size of region for picking each primer')
-def run_tdna_primers(input_stock_num, maxn, ext5, ext3, p_zone):
+@click.option('-s', '--show-seq', default=False, help='Show the sequence around the insertion site', is_flag=True)
+def run_tdna_primers(input_stock_num, maxn, ext5, ext3, p_zone, show_seq):
     sequence_length_defs = {
         'maxN': maxn,
         'ext5': ext5,
@@ -30,8 +31,12 @@ def run_tdna_primers(input_stock_num, maxn, ext5, ext3, p_zone):
 
     result = {}
     for poly_name, poly_info in db[input_stock_num].items():
-        print('Making primers for ' + poly_name)
+        print('Making primers for ' + poly_name + '\n')
         sequence = get_seq(poly_info, sequence_length_defs, genome)
+        if show_seq is True:
+            click.echo('Genomic sequence around insert:\n')
+            click.echo(sequence, color='red')
+            click.echo('\n')
         result['poly_name'] = poly_name
         p3s, p3p = load_conf()
         primer_results = make_primers(sequence, sequence_length_defs, p3s, p3p)

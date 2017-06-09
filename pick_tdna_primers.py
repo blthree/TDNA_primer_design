@@ -1,6 +1,5 @@
 import click
 from pyfaidx import Fasta
-from primer3.bindings import designPrimers
 
 
 def show_help_if_missing(ctx, param, value):
@@ -20,7 +19,6 @@ def show_help_if_missing(ctx, param, value):
 @click.option('-z', '--p_zone', default=200, help='p_zone, size of region for picking each primer')
 @click.option('-s', '--show-seq', default=False, help='Show the sequence around the insertion site', is_flag=True)
 def run_tdna_primers(input_stock_num, maxn, ext5, ext3, p_zone, show_seq):
-
     # TODO: add option to show primer3 output details and save to file
 
     sequence_length_defs = {
@@ -171,7 +169,8 @@ def make_primers(sequence, sequence_length_defs, primer3_seq_args, primer3_prime
     '''
     total = reduce(lambda x, y: x + y, [v for v in sequence_length_defs.values()])
     primer3_seq_args['SEQUENCE_PRIMER_PAIR_OK_REGION_LIST'] = [0, int(sequence_length_defs['p_zone'] / 2),
-                                                               total - int((sequence_length_defs['p_zone'] / 2)), int((sequence_length_defs['p_zone'] / 2))]
+                                                               total - int((sequence_length_defs['p_zone'] / 2)),
+                                                               int((sequence_length_defs['p_zone'] / 2))]
     primer3_primer_args['PRIMER_PRODUCT_SIZE_RANGE'] = [total - sequence_length_defs['p_zone'], total]
     primer3_seq_args['SEQUENCE_TEMPLATE'] = sequence
     a = designPrimers(primer3_seq_args, primer3_primer_args)

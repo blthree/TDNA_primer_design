@@ -1,6 +1,9 @@
-import os, sys
+import os
+import sys
 import urllib.request
+
 from setuptools import setup, find_packages
+
 
 def reporthook(blocknum, blocksize, totalsize):
     readsofar = blocknum * blocksize
@@ -9,9 +12,9 @@ def reporthook(blocknum, blocksize, totalsize):
         s = "\r%5.1f%% %*d / %d" % (
             percent, len(str(totalsize)), readsofar, totalsize)
         sys.stderr.write(s)
-        if readsofar >= totalsize: # near the end
+        if readsofar >= totalsize:  # near the end
             sys.stderr.write("\n")
-    else: # total size is unknown
+    else:  # total size is unknown
         sys.stderr.write("read %d\n" % (readsofar,))
 
 
@@ -27,11 +30,10 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-        'pick_tdna_primers=pick_tdna_primers:run_tdna_primers'
+            'pick_tdna_primers=pick_tdna_primers:run_tdna_primers'
         ]
     }
 )
-
 
 signal_url = 'http://signal.salk.edu/database/transcriptome/'
 data_files = ['T-DNA.SALK', 'T-DNA.SAIL', 'T-DNA.GABI', 'AT9.fa']
@@ -78,7 +80,7 @@ primer3_primer_args = {
 }
 f = open('primer3.conf', 'w')
 for args in (primer3_seq_args, primer3_primer_args):
-    for k,v in args.items():
-        f.write(','.join((k,str(v)))+'\n')
+    for k, v in args.items():
+        f.write(','.join((k, str(v))) + '\n')
 f.close()
 sys.stderr.write(' Done\n')

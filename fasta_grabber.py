@@ -14,7 +14,9 @@ def make_ref_file():
         # skip secondary isoforms e.g. AT1G12345.1
         if line[3][-2:-1] == '.':
             continue
+        line[0] = line[0][-1:]
         cut_line = line[0:4] + [line[5]]
+
         formatted_line = '\t'.join(cut_line)
         f_out.write(formatted_line + '\n')
     f.close()
@@ -38,8 +40,10 @@ class gene(object):
         self.dict_entry = storage_dict.get(self.AGI)
         # unpack the dictionary into properties
         self.chr, self.start, self.end, self.orientation = self.dict_entry.values()
+        self.chr = 'chr' + self.chr[-1:]
 
     def get_genomic_seq(self, bp_upstream=0, bp_downstream=0):
+
         if self.orientation == '+':
             seq = genome[self.chr][self.start - bp_upstream: self.end + bp_downstream]
             print(self.chr)
@@ -51,9 +55,17 @@ class gene(object):
             raise AttributeError('Gene Orientation must be + or -!')
         return seq
 
+def get_seq(chr, start, end, orientation, bp_upstream=0, bp_downstream=0):
+    chr = 'chr' + chr[-1:]
+    if orientation == '+':
+        seq = genome[chr][start - bp_upstream: end + bp_downstream]
+    elif orientation == '-':
+        seq = -genome[chr][start - bp_downstream: end + bp_upstream]
+    else:
+        raise AttributeError('Gene Orientation must be + or -!')
+    return seq
 
-
-genome = Fasta('data/AT9.fa')
+genome = Fasta('AT9.fa')
 
 gene1 = gene('AT1G02580')
 print(gene1.get_genomic_seq())

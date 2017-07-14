@@ -69,3 +69,5 @@ genome = Fasta('AT9.fa')
 
 gene1 = gene('AT1G02580')
 print(gene1.get_genomic_seq())
+a = gene1.get_genomic_seq()
+print(type(a))

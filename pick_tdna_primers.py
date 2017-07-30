@@ -2,34 +2,20 @@ import click
 from pyfaidx import Fasta
 
 
-def show_help_if_missing(ctx, param, value):
-    if not value:
-        click.secho("The '{0}' parameter is mandatory, please check the usage below:\n".format(param.name),
-                    fg='yellow', bold=True)
-        click.secho(ctx.get_help())
-        ctx.exit()
-    return value
 
 
-@click.command()
-@click.option('-i', '--input_stock_num', help='Stock number to generate primers for', callback=show_help_if_missing)
-@click.option('-N', '--maxN', default=300, help='maxN or maximum distance from flanking sequence to T-DNA insertion')
-@click.option('--ext5', default=300, help='ext5, basepairs upstream of T-DNA to exclude')
-@click.option('--ext3', default=300, help='ext3, basepairs downstream of T-DNA to exclude')
-@click.option('-z', '--p_zone', default=200, help='p_zone, size of region for picking each primer')
-@click.option('-s', '--show-seq', default=False, help='Show the sequence around the insertion site', is_flag=True)
 def run_tdna_primers(input_stock_num, maxn, ext5, ext3, p_zone, show_seq):
     # TODO: add option to show primer3 output details and save to file
 
     sequence_length_defs = {
-        'maxN': maxn,
-        'ext5': ext5,
-        'ext3': ext3,
-        'p_zone': p_zone * 2  # size of left and right regions together, so twice the Signal.salk.edu value
+        'maxN': 300,
+        'ext5': 300,
+        'ext3': 300,
+        'p_zone': 100 * 2  # size of left and right regions together, so twice the Signal.salk.edu value
     }
 
     data_filenames = ['data/T-DNA.SALK', 'data/T-DNA.SAIL', 'data/T-DNA.GABI']
-    db = init_db(data_filenames)
+    db = init_db(data_filenames) # put mongo find code here
     genome = Fasta('data/AT9.fa')
 
     result = {}
@@ -66,33 +52,6 @@ def is_float(s):
         return False
 
 
-def init_db(filenames):
-    assert type(filenames) == list, "Filenames must be in the form of a list"
-    records = {}
-    for fname in filenames:
-        f = open(fname, 'r')
-        for line in f:
-            s_line = line.strip('\n').split('\t')
-            stock_name = s_line[0].split('.')[0]
-            poly_name = s_line[0]
-            poly_chr = s_line[1].split(':')[0]
-            poly_chr = poly_chr[3:]
-            poly_locs = s_line[3].split(',')[0]
-            poly_start = poly_locs.split('/')[1].split('-')[0]
-            poly_end = poly_locs.split('/')[1].split('-')[1]
-            orientation = s_line[3].split('/')[0]
-            # load into dict of dicts object
-            if stock_name in records and poly_name in records[stock_name]:
-                records[stock_name][poly_name + '.1'] = {'chr': poly_chr, 'orientation': orientation,
-                                                         'start': poly_start,
-                                                         'end': poly_end}
-            elif stock_name not in records:
-                records[stock_name] = {
-                    poly_name: {'chr': poly_chr, 'orientation': orientation, 'start': poly_start, 'end': poly_end}}
-            else:
-                records[stock_name][poly_name] = {'chr': poly_chr, 'orientation': orientation, 'start': poly_start,
-                                                  'end': poly_end}
-    return records
 
 
 def load_conf(conf_file='primer3.conf'):

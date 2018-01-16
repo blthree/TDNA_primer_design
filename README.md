@@ -6,8 +6,8 @@ Running setup.py will download the necessary files including the Arabidopsis gen
 After the initial file downloads the tool can be run without an internet connection.
 
 A correspsonding REST API is currently partially implemented, available at https://wh725mphi9.execute-api.us-east-1.amazonaws.com/alpha . See below for endpoints. Full documentation coming soon.
-
-/fasta 
+```
+/fasta
   /by-gene
     /{AGI}
   /by-coords
@@ -22,3 +22,4 @@ A correspsonding REST API is currently partially implemented, available at https
     /{SALK_ID}
   /get-fasta
     /{SALK_ID}
+```
